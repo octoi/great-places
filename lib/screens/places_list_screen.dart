@@ -18,26 +18,36 @@ class PlacesListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<GreatPlaces>(
-        builder: (ct, greatPlaces, child) => greatPlaces.items.length <= 0
-            ? child != null
-                ? child
-                : Text(':(')
-            : ListView.builder(
-                itemCount: greatPlaces.items.length,
-                itemBuilder: (ctx, i) {
-                  final place = greatPlaces.items[i];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: FileImage(place.image),
+      body: FutureBuilder(
+        future: Provider.of<GreatPlaces>(context, listen: false)
+            .fetchAndSetPlaces(),
+        builder: (ctx, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Consumer<GreatPlaces>(
+                    builder: (ct, greatPlaces, child) =>
+                        greatPlaces.items.length <= 0
+                            ? child != null
+                                ? child
+                                : Text(':(')
+                            : ListView.builder(
+                                itemCount: greatPlaces.items.length,
+                                itemBuilder: (ctx, i) {
+                                  final place = greatPlaces.items[i];
+                                  return ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundImage: FileImage(place.image),
+                                    ),
+                                    title: Text(place.title),
+                                    onTap: () {},
+                                  );
+                                }),
+                    child: Center(
+                      child: Text('Got no places yet, start adding some!'),
                     ),
-                    title: Text(place.title),
-                    onTap: () {},
-                  );
-                }),
-        child: Center(
-          child: Text('Got no places yet, start adding some!'),
-        ),
+                  ),
       ),
     );
   }
