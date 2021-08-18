@@ -13,7 +13,6 @@ class GreatPlaces with ChangeNotifier {
       id: DateTime.now().toString(),
       title: title,
       image: image,
-      location: PlaceLocation(latitude: 0, longitude: 0),
     );
 
     _items.add(newPlace);
@@ -33,7 +32,6 @@ class GreatPlaces with ChangeNotifier {
           (item) => Place(
             id: item['id'],
             title: item['title'],
-            location: PlaceLocation(latitude: 0, longitude: 0),
             image: File(item['image']),
           ),
         )
